@@ -1,5 +1,7 @@
-﻿using FutureStore.Interfaces;
+﻿using FutureStore.DTOs.Category;
+using FutureStore.Interfaces;
 using FutureStore.Models;
+using FutureStore.Services;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +13,25 @@ namespace FutureStore.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
-        public ProductController(IProductRepository productRepository)
+        private readonly ProductService _productService;
+
+        public ProductController(IProductRepository productRepository,ProductService productService)
         {
             _productRepository = productRepository;
+            _productService = productService;
         }
         [HttpGet]
         public IActionResult Get()
         {
             IEnumerable<Product> products = _productRepository.GetAll();
-            return Ok(products);
+            var productsDtos = new List<ProductGet>();
+            foreach (var product in products)
+            {
+                var productDto = _productService.ConvertToProductGet(product);
+                productsDtos.Add(productDto);
+            }
+            
+            return Ok(productsDtos);
         }
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)

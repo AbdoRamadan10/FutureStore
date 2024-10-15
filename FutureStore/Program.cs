@@ -2,6 +2,7 @@
 using FutureStore.Data;
 using FutureStore.GenericRepository;
 using FutureStore.Interfaces;
+using FutureStore.Mapper;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ namespace FutureStore
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -37,7 +39,7 @@ namespace FutureStore
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseAuthorization();  
 
 
             app.MapControllers();
