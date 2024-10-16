@@ -1,4 +1,5 @@
-﻿using FutureStore.DTOs.Category;
+﻿using AutoMapper;
+using FutureStore.DTOs.Category;
 using FutureStore.Interfaces;
 using FutureStore.Models;
 using FutureStore.Services;
@@ -13,26 +14,25 @@ namespace FutureStore.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
-        private readonly ProductService _productService;
+        private readonly IMapper _mapper;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public ProductController(IProductRepository productRepository,ProductService productService)
+        public ProductController(IProductRepository productRepository,
+            IMapper mapper,ICategoryRepository categoryRepository)
         {
             _productRepository = productRepository;
-            _productService = productService;
+            _mapper = mapper;
+            _categoryRepository = categoryRepository;
         }
+
         [HttpGet]
         public IActionResult Get()
         {
             IEnumerable<Product> products = _productRepository.GetAll();
-            var productsDtos = new List<ProductGet>();
-            foreach (var product in products)
-            {
-                var productDto = _productService.ConvertToProductGet(product);
-                productsDtos.Add(productDto);
-            }
-            
+            var productsDtos = products.Select(p => _mapper.Map<ProductGet>(p));
             return Ok(productsDtos);
         }
+        
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(int id)
         {
@@ -41,17 +41,23 @@ namespace FutureStore.Controllers
             {
                 return NotFound("The Product record couldn't be found.");
             }
-            return Ok(product);
+            var productDto = _mapper.Map<ProductGet>(product);
+            return Ok(productDto);
         }
         [HttpPost]
-        public IActionResult Post([FromBody] Product product)
+        public IActionResult Post([FromBody] ProductPost productPost)
         {
-            if (product == null)
+            var categoryModel = _categoryRepository.FindOne(c=>c.Id == productPost.CategoryId);
+            if (categoryModel == null)
+            {
+                return BadRequest("Category is null.");
+            }
+            if (productPost == null)
             {
                 return BadRequest("Product is null.");
             }
 
-            
+            var product = _mapper.Map<Product>(productPost);
             _productRepository.Add(product);
             return CreatedAtRoute(
                   "Get",
@@ -60,22 +66,23 @@ namespace FutureStore.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Product product)
+        public IActionResult Put(int id, [FromBody] ProductPost productPost)
         {
-            if (product == null)
+            if (productPost == null)
             {
                 return BadRequest("Productloyee is null.");
             }
+
             Product productToUpdate = _productRepository.FindOne(x => x.Id == id);
             if (productToUpdate == null)
             {
                 return NotFound("The Productloyee record couldn't be found.");
             }
 
-            productToUpdate.CategoryId = product.CategoryId;
-            productToUpdate.Code = product.Code;
-            productToUpdate.NameEN = product.NameEN;
-            productToUpdate.NameAR = product.NameAR;
+            productToUpdate.CategoryId = productPost.CategoryId;
+            productToUpdate.Code = productPost.Code;
+            productToUpdate.NameEN = productPost.NameEN;
+            productToUpdate.NameAR = productPost.NameAR;
 
             _productRepository.Update(productToUpdate);
             return NoContent();
@@ -84,12 +91,12 @@ namespace FutureStore.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            Product employee = _productRepository.FindOne(x => x.Id == id);
-            if (employee == null)
+            Product product = _productRepository.FindOne(x => x.Id == id);
+            if (product == null)
             {
                 return NotFound("The Productloyee record couldn't be found.");
             }
-            _productRepository.Delete(employee);
+            _productRepository.Delete(product);
             return NoContent();
         }
     }

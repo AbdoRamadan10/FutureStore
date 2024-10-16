@@ -10,8 +10,11 @@ namespace FutureStore.Mapper
         {
             CreateMap<ProductGet, Product>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id)).ReverseMap();
-        
-        
+            CreateMap<ProductPost, Product>()
+               .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId)).ReverseMap();
+            
+
+
         }
     }
 }
