@@ -2,6 +2,6 @@
 {
     public class Category : BaseModel
     {
-        public IEnumerable<Product> Products { get; set; } = new List<Product>(); 
+        public IEnumerable<Product>? Products { get; set; } 
     }
 }

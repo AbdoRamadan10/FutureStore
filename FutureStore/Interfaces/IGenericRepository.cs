@@ -8,6 +8,7 @@ namespace FutureStore.Interfaces
         IQueryable<TEntity> GetAll(FindOptions? findOptions = null);
         TEntity FindOne(Expression<Func<TEntity, bool>> predicate, FindOptions? findOptions = null);
         IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> predicate, FindOptions? findOptions = null);
+        public TEntity FindWithInclude(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> include, FindOptions? findOptions = null);
         void Add(TEntity entity);
         void AddMany(IEnumerable<TEntity> entities);
         void Update(TEntity entity);

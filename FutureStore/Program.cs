@@ -38,6 +38,13 @@ namespace FutureStore
                 app.UseSwaggerUI();
             }
 
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var futureStorecontext = services.GetRequiredService<FutureStoreContext>();
+                futureStorecontext.Database.EnsureCreated();
+                FutureStoreInitializer.Initializer(futureStorecontext);
+            }
             app.UseHttpsRedirection();
 
             app.UseAuthorization();  

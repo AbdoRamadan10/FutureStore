@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FutureStore.Migrations
 {
     [DbContext(typeof(FutureStoreContext))]
-    [Migration("20241014190041_init")]
+    [Migration("20241017161339_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -65,7 +65,6 @@ namespace FutureStore.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedTimeStamp")

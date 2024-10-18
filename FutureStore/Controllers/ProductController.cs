@@ -26,14 +26,14 @@ namespace FutureStore.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetAll()
         {
             IEnumerable<Product> products = _productRepository.GetAll();
             var productsDtos = products.Select(p => _mapper.Map<ProductGet>(p));
             return Ok(productsDtos);
         }
         
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             Product product = _productRepository.FindOne(x => x.Id == id);
@@ -59,16 +59,16 @@ namespace FutureStore.Controllers
 
             var product = _mapper.Map<Product>(productPost);
             _productRepository.Add(product);
-            return CreatedAtRoute(
-                  "Get",
+            return CreatedAtAction(
+                  nameof(Get),
                   new { Id = product.Id },
-                  product);
+                  _mapper.Map<ProductGet>(product));
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] ProductPost productPost)
+        public IActionResult Put(int id, [FromBody] ProductPut productPut)
         {
-            if (productPost == null)
+            if (productPut == null)
             {
                 return BadRequest("Productloyee is null.");
             }
@@ -79,10 +79,14 @@ namespace FutureStore.Controllers
                 return NotFound("The Productloyee record couldn't be found.");
             }
 
-            productToUpdate.CategoryId = productPost.CategoryId;
-            productToUpdate.Code = productPost.Code;
-            productToUpdate.NameEN = productPost.NameEN;
-            productToUpdate.NameAR = productPost.NameAR;
+            productToUpdate.CategoryId = productPut.CategoryId;
+            productToUpdate.Code = productPut.Code;
+            productToUpdate.NameEN = productPut.NameEN;
+            productToUpdate.NameAR = productPut.NameAR;
+            productToUpdate.Active =productPut.Active;
+            productToUpdate.UpdatedTimeStamp=DateTime.Now;
+            productToUpdate.Description = productPut.Description;
+
 
             _productRepository.Update(productToUpdate);
             return NoContent();

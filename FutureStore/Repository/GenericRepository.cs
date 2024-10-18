@@ -42,6 +42,17 @@ namespace FutureStore.GenericRepository
         {
             return Get(findOptions).Where(predicate);
         }
+    
+
+        public TEntity FindWithInclude(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>>? include =null, FindOptions? findOptions = null)
+        {
+            if (include != null)
+            {
+                return Get(findOptions).Include(include).FirstOrDefault(predicate)!;
+            }
+            return Get(findOptions).FirstOrDefault(predicate)!;
+        }
+
         public IQueryable<TEntity> GetAll(FindOptions? findOptions = null)
         {
             return Get(findOptions);
@@ -75,6 +86,8 @@ namespace FutureStore.GenericRepository
             {
                 entity.AsNoTracking();
             }
+            
+           
             return entity;
         }
     }
