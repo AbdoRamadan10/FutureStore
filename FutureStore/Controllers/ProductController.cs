@@ -98,7 +98,7 @@ namespace FutureStore.Controllers
             Product product = _productRepository.FindOne(x => x.Id == id);
             if (product == null)
             {
-                return NotFound("The Productloyee record couldn't be found.");
+                return NotFound("The Product record couldn't be found.");
             }
             _productRepository.Delete(product);
             return NoContent();

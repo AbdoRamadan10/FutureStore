@@ -15,6 +15,8 @@ namespace FutureStore.Mapper
 
             CreateMap<CategoryGet, Category>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id)).ReverseMap();
+            CreateMap<CategoryPost, Category>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id)).ReverseMap();
 
 
 

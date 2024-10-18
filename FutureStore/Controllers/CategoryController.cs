@@ -47,52 +47,53 @@ namespace FutureStore.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] CategoryPost categoryPost)
         {
-          
+
             if (categoryPost == null)
             {
-                return BadRequest("Product is null.");
+                return BadRequest("Category is null.");
             }
 
             var category = _mapper.Map<Category>(categoryPost);
             _categoryRepository.Add(category);
-            return CreatedAtRoute(
-                  "Get",
+            return CreatedAtAction(
+                  nameof(Get),
                   new { Id = category.Id },
-                  categoryPost);
+                  _mapper.Map <CategoryGet>(category));
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] ProductPost productPost)
+        public IActionResult Put(int id, [FromBody] CategoryPut categoryPut)
         {
-            if (productPost == null)
+            if (categoryPut == null)
             {
-                return BadRequest("Productloyee is null.");
+                return BadRequest("Category is null.");
             }
 
-            Product productToUpdate = _productRepository.FindOne(x => x.Id == id);
-            if (productToUpdate == null)
+            Category categoryToUpdate = _categoryRepository.FindOne(x => x.Id == id);
+            if (categoryToUpdate == null)
             {
-                return NotFound("The Productloyee record couldn't be found.");
+                return NotFound("The Category record couldn't be found.");
             }
 
-            productToUpdate.CategoryId = productPost.CategoryId;
-            productToUpdate.Code = productPost.Code;
-            productToUpdate.NameEN = productPost.NameEN;
-            productToUpdate.NameAR = productPost.NameAR;
-
-            _productRepository.Update(productToUpdate);
+            categoryToUpdate.NameEN = categoryPut.NameEN;
+            categoryToUpdate.NameAR = categoryPut.NameAR;
+            categoryToUpdate.Active = categoryPut.Active;
+            categoryToUpdate.UpdatedTimeStamp=DateTime.Now;
+            categoryToUpdate.Description = categoryPut.Description;
+            
+            _categoryRepository.Update(categoryToUpdate);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            Product product = _productRepository.FindOne(x => x.Id == id);
-            if (product == null)
+            Category category = _categoryRepository.FindOne(x => x.Id == id);
+            if (category == null)
             {
-                return NotFound("The Productloyee record couldn't be found.");
+                return NotFound("The Category record couldn't be found.");
             }
-            _productRepository.Delete(product);
+            _categoryRepository.Delete(category);
             return NoContent();
         }
     }
