@@ -1,4 +1,4 @@
-﻿using FutureStore.Models;
+﻿using FutureStore.Models.Buisness;
 
 namespace FutureStore.Data
 {

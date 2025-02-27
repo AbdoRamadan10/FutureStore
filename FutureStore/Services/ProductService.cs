@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FutureStore.DTOs.Category;
-using FutureStore.Models;
+using FutureStore.Models.Buisness;
 
 namespace FutureStore.Services
 {

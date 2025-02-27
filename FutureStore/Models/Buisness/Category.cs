@@ -1,4 +1,4 @@
-﻿namespace FutureStore.Models
+﻿namespace FutureStore.Models.Buisness
 {
     public class Category : BaseModel
     {

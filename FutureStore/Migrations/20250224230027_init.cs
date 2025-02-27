@@ -17,10 +17,12 @@ namespace FutureStore.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameAR = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NameEN = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    NameAR = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameEN = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -34,12 +36,14 @@ namespace FutureStore.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    NameAR = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NameEN = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Price = table.Column<double>(type: "float", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    NameAR = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameEN = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedTimeStamp = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Active = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -48,8 +52,7 @@ namespace FutureStore.Migrations
                         name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

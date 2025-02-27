@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
+using FutureStore.Authorization.CustomRoleBased;
+using FutureStore.Authorization.CustomRolePermissionBased;
 using FutureStore.DTOs.Category;
+using FutureStore.Enums;
 using FutureStore.Interfaces;
-using FutureStore.Models;
+using FutureStore.Models.Buisness;
 using FutureStore.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +15,7 @@ namespace FutureStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
@@ -26,6 +31,7 @@ namespace FutureStore.Controllers
         }
 
         [HttpGet]
+        [CheckRolePermission(PermissionEnum.ReadProducts)]
         public IActionResult GetAll()
         {
             IEnumerable<Product> products = _productRepository.GetAll();
@@ -34,6 +40,7 @@ namespace FutureStore.Controllers
         }
         
         [HttpGet("{id}")]
+        [CheckRolePermission(PermissionEnum.ReadProducts)]
         public IActionResult Get(int id)
         {
             Product product = _productRepository.FindOne(x => x.Id == id);
@@ -45,6 +52,7 @@ namespace FutureStore.Controllers
             return Ok(productDto);
         }
         [HttpPost]
+        [CheckRolePermission(PermissionEnum.AddProducts)]
         public IActionResult Post([FromBody] ProductPost productPost)
         {
             var categoryModel = _categoryRepository.FindOne(c=>c.Id == productPost.CategoryId);
@@ -66,6 +74,7 @@ namespace FutureStore.Controllers
         }
 
         [HttpPut("{id}")]
+        [CheckRolePermission(PermissionEnum.UpdateProducts)]
         public IActionResult Put(int id, [FromBody] ProductPut productPut)
         {
             if (productPut == null)
@@ -93,6 +102,7 @@ namespace FutureStore.Controllers
         }
 
         [HttpDelete("{id}")]
+        [CheckRolePermission(PermissionEnum.DeleteProducts)]
         public IActionResult Delete(int id)
         {
             Product product = _productRepository.FindOne(x => x.Id == id);
