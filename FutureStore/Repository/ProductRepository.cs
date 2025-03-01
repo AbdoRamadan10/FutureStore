@@ -1,6 +1,6 @@
 ﻿using FutureStore.Data;
 using FutureStore.Interfaces;
-using FutureStore.Models;
+using FutureStore.Models.Buisness;
 
 namespace FutureStore.GenericRepository
 {

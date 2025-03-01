@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FutureStore.Migrations
 {
     [DbContext(typeof(FutureStoreContext))]
-    [Migration("20241017161339_init")]
+    [Migration("20250224230027_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -33,20 +33,23 @@ namespace FutureStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedTimeStamp")
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("CreatedTimeStamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameAR")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameEN")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedTimeStamp")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -61,29 +64,32 @@ namespace FutureStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<bool?>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedTimeStamp")
+                    b.Property<DateTime?>("CreatedTimeStamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameAR")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameEN")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
+                    b.Property<double?>("Price")
                         .HasColumnType("float");
+
+                    b.Property<DateTime?>("UpdatedTimeStamp")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -96,9 +102,7 @@ namespace FutureStore.Migrations
                 {
                     b.HasOne("FutureStore.Models.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
