@@ -3,6 +3,7 @@ using FutureStore.Data;
 using FutureStore.GenericRepository;
 using FutureStore.Interfaces;
 using FutureStore.Mapper;
+using FutureStore.Middlewares;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,11 +20,20 @@ namespace FutureStore
                 builder.Configuration.GetConnectionString("DefaultConnection")
                 ));
 
-
+            
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder => builder.WithOrigins() // Specify your allowed origin
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader()
+                                      .AllowAnyOrigin());
+            });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -47,10 +57,15 @@ namespace FutureStore
             }
             app.UseHttpsRedirection();
 
+            app.UseCors("AllowAll");
+
             app.UseAuthorization();  
 
 
             app.MapControllers();
+
+            app.UseMiddleware<RateLimitingMidleware>();
+            app.UseMiddleware<ProfilingMiddleware>();
 
             app.Run();
         }

@@ -9,6 +9,8 @@ namespace FutureStore.GenericRepository
         public ProductRepository(FutureStoreContext context)
        : base(context)
         {
+
+
         }
     }
 }
