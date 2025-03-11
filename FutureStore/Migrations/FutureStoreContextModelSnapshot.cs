@@ -195,6 +195,9 @@ namespace FutureStore.Migrations
                     b.Property<double?>("Price")
                         .HasColumnType("float");
 
+                    b.Property<double?>("Quantity")
+                        .HasColumnType("float");
+
                     b.Property<DateTime?>("UpdatedTimeStamp")
                         .HasColumnType("datetime2");
 

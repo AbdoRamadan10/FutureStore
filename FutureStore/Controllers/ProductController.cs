@@ -18,9 +18,11 @@ namespace FutureStore.Controllers
     [Authorize]
     public class ProductController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
+        //private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-        private readonly ICategoryRepository _categoryRepository;
+        //private readonly ICategoryRepository _categoryRepository;
+        private readonly IGenericRepository<Category> _categoryRepository;
+        private readonly IGenericRepository<Product> _productRepository;
 
         public ProductController(IProductRepository productRepository,
             IMapper mapper,ICategoryRepository categoryRepository)
@@ -36,6 +38,12 @@ namespace FutureStore.Controllers
         {
             IEnumerable<Product> products = _productRepository.GetAll();
             var productsDtos = products.Select(p => _mapper.Map<ProductGet>(p));
+            foreach (var productDto in productsDtos)
+            {
+                productDto.CategoryNameAR = _categoryRepository.FindOne(c => c.Id == productDto.CategoryId).NameAR;
+                //productDto.CategoryNameEN = _categoryRepository.FindOne(c => c.Id == productDto.CategoryId).NameEN;
+
+            }
             return Ok(productsDtos);
         }
         
@@ -49,6 +57,8 @@ namespace FutureStore.Controllers
                 return NotFound("The Product record couldn't be found.");
             }
             var productDto = _mapper.Map<ProductGet>(product);
+            productDto.CategoryNameAR = _categoryRepository.FindOne(c => c.Id == productDto.CategoryId).NameAR;
+            productDto.CategoryNameEN = _categoryRepository.FindOne(c => c.Id == productDto.CategoryId).NameEN;
             return Ok(productDto);
         }
         [HttpPost]
