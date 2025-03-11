@@ -16,23 +16,23 @@ namespace FutureStore.GenericRepository
         public void Add(TEntity entity)
         {
             _dBContext.Set<TEntity>().Add(entity);
-            _dBContext.SaveChanges();
+            _dBContext.SaveChangesAsync();
         }
         public void AddMany(IEnumerable<TEntity> entities)
         {
             _dBContext.Set<TEntity>().AddRange(entities);
-            _dBContext.SaveChanges();
+            _dBContext.SaveChangesAsync();
         }
         public void Delete(TEntity entity)
         {
             _dBContext.Set<TEntity>().Remove(entity);
-            _dBContext.SaveChanges();
+            _dBContext.SaveChangesAsync();
         }
         public void DeleteMany(Expression<Func<TEntity, bool>> predicate)
         {
             var entities = Find(predicate);
             _dBContext.Set<TEntity>().RemoveRange(entities);
-            _dBContext.SaveChanges();
+            _dBContext.SaveChangesAsync();
         }
         public TEntity FindOne(Expression<Func<TEntity, bool>> predicate, FindOptions? findOptions = null)
         {
@@ -60,7 +60,7 @@ namespace FutureStore.GenericRepository
         public void Update(TEntity entity)
         {
             _dBContext.Set<TEntity>().Update(entity);
-            _dBContext.SaveChanges();
+            _dBContext.SaveChangesAsync();
         }
         public bool Any(Expression<Func<TEntity, bool>> predicate)
         {

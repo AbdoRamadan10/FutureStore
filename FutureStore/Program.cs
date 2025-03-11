@@ -32,6 +32,7 @@ namespace FutureStore
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddControllers(options =>
             {
                 //options.Filters.Add<PermissionBasedAuthorizationFilter>();
